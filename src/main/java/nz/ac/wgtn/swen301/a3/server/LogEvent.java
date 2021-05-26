@@ -12,7 +12,9 @@
 
 package nz.ac.wgtn.swen301.a3.server;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonTypeId;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Date;
@@ -67,10 +69,6 @@ public class LogEvent {
         this.logger = logger;
         this.level = level;
         this.errorDetails = errorDetails;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(LevelEnum.DEBUG.isGreaterOrEqual(LevelEnum.FATAL));
     }
 
     /**
