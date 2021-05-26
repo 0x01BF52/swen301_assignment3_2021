@@ -15,4 +15,12 @@
         <servlet-name>LogsServlet</servlet-name>
         <url-pattern>/logs</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>StatsServlet</servlet-name>
+        <servlet-class>nz.ac.wgtn.swen301.a3.server.StatsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StatsServlet</servlet-name>
+        <url-pattern>/stats</url-pattern>
+    </servlet-mapping>
 </web-app>
