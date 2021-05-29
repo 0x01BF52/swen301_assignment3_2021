@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,9 +22,7 @@ import java.util.stream.Collectors;
  * This class must have a default constructor (public, no parameters 1). [2 marks]
  */
 public class LogsServlet extends HttpServlet {
-    private final Persistency persistency = new Persistency();
     private final ObjectMapper objectMapper = new ObjectMapper();
-
 
 
     /**
@@ -38,43 +39,40 @@ public class LogsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("doGet");
-        resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Servlet</title>");
-        out.println("</head>");
-        out.println("<body>");
-
-        out.println("<h1>Echoing Request Headers</h1>");
-        out.println("<table border><th>Index</th><th>Value</th>");
-        // list headers send by the client
-        var tempList = persistency.getList();
-        persistency.add(new LogEvent(UUID.randomUUID(),"random message",new Date(),"thread","logger", LevelEnum.ERROR, "string"));
-        for (var i = 0; i < tempList.size(); i++) {
-            var index = String.valueOf(i);
-            var value = tempList.get(i);
-
-            out.print("<tr><td>");
-            out.print(index);
-            out.print("</td><td>");
-            out.print(objectMapper.writeValueAsString(value));
-            out.println("</td></tr>");
+        var reqLimit = req.getParameter("limit");
+        var reqLevelSting = req.getParameter("level");
+        try {
+            var limit = Integer.parseInt(reqLimit);
+            LevelEnum.valueOf(reqLevelSting);
+            if (limit <= 0) {
+                throw new InvalidParameterException();
+            }
+        } catch (Exception e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.close();
+            return;
         }
-//        for (Enumeration headers = req.getHeaderNames(); headers.hasMoreElements(); ) {
-//            String header = headers.nextElement().toString();
-//            String value = req.getHeader(header);
-//            out.print("<tr><td>");
-//            out.print(header);
-//            out.print("</td><td>");
-//            out.print(value);
-//            out.println("</td></tr>");
-//        }
-//        req.getHeaderNames().asIterator().forEachRemaining(System.out::println);
-        out.println("</table>");
-        out.println("</body>");
-        out.println("</html>");
+        System.out.println("LogsServlet doGet Invoke");
+        resp.setContentType("application/json");
+        var level = LevelEnum.valueOf(reqLevelSting);
+        Persistency.add(new LogEvent(UUID.randomUUID(), "random message", new Date(), "thread", "logger", LevelEnum.FATAL, "string"));
+        var db = Persistency.getDB();
+        ArrayList<LogEvent> results = new ArrayList<>();
+        if (db.isEmpty()) {
+            out.println(results);
+            out.close();
+            return;
+        }
+
+        for (int i = db.size() - 1; (i >= db.size() - 1 - Integer.parseInt(reqLimit)) && (i >= 0); i--) {
+            if (db.get(i).getLevel().isGreaterOrEqual(level)) {
+                results.add(db.get(i));
+            }
+        }
+        results.sort(Comparator.comparing(LogEvent::getTimestamp));
+        out.println(objectMapper.writeValueAsString(results));
+
         out.close();
     }
 
@@ -82,6 +80,6 @@ public class LogsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("doPostInvoke");
         var reqBody = req.getReader().lines().collect(Collectors.joining());
-        persistency.add(objectMapper.readValue(reqBody, LogEvent.class));
+        Persistency.add(objectMapper.readValue(reqBody, LogEvent.class));
     }
 }

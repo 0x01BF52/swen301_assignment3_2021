@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen301.a3.server;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Uses:
@@ -14,8 +15,8 @@ import java.util.List;
  */
 
 public class StatsTableHTMLBuilder {
-    private int columns;
-    private StringBuilder table = new StringBuilder();
+    private final int columns;
+    private final StringBuilder table = new StringBuilder();
     private static final String DOCTYPE = "<!DOCTYPE html>";
     private static final String HEAD = "<head><title>Log Statistics</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'></head>";
     private static final String TITLE = "<h1>Log Statistics</h1>";
@@ -62,7 +63,7 @@ public class StatsTableHTMLBuilder {
      *
      * @param values the values
      */
-    public void addTableHeader(List<String> values) {
+    private void addTableHeader(List<String> values) {
         int lastIndex = table.lastIndexOf(TABLE_END);
         if (lastIndex > 0) {
             StringBuilder sb = new StringBuilder();
@@ -73,33 +74,38 @@ public class StatsTableHTMLBuilder {
                 sb.append(HEADER_END);
             }
             sb.append(ROW_END);
-            table.insert(lastIndex, sb.toString());
+            table.insert(lastIndex, sb);
         }
     }
 
 
     /**
-     * Add row values.
+     * Add log stats.
      *
-     * @param values the values
+     * @param loggerName   the logger name
+     * @param groupByLevel the group by level
      */
-    public void addRowValues(List<String> values) {
-        if (values.size() != columns) {
-            System.out.println("Error column lenth");
-        } else {
-            int lastIndex = table.lastIndexOf(ROW_END);
-            if (lastIndex > 0) {
-                int index = lastIndex + ROW_END.length();
-                StringBuilder sb = new StringBuilder();
-                sb.append(ROW_START);
-                for (String value : values) {
-                    sb.append(COLUMN_START);
-                    sb.append(value);
-                    sb.append(COLUMN_END);
+    public void addLogStats(String loggerName, Map<LevelEnum, List<LogEvent>> groupByLevel) {
+        int lastIndex = table.lastIndexOf(ROW_END);
+        if (lastIndex > 0) {
+            int index = lastIndex + ROW_END.length();
+            StringBuilder sb = new StringBuilder();
+            sb.append(ROW_START);
+            sb.append(COLUMN_START);
+            sb.append(loggerName);
+            sb.append(COLUMN_END);
+            for (int i = 0; i < LevelEnum.values().length; i++) {
+                sb.append(COLUMN_START);
+                LevelEnum currentLevel = LevelEnum.values()[i];
+                if (groupByLevel.containsKey(currentLevel)) {
+                    sb.append(groupByLevel.get(currentLevel).size());
+                } else {
+                    sb.append("0");
                 }
-                sb.append(ROW_END);
-                table.insert(index, sb.toString());
+                sb.append(COLUMN_END);
             }
+            sb.append(ROW_END);
+            table.insert(index, sb);
         }
     }
 

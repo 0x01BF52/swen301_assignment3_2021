@@ -5,23 +5,18 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Persistency {
-    private final List<LogEvent> list;
-
-    public Persistency() {
-        this.list = new CopyOnWriteArrayList<>();
-    }
-
-    public Boolean add(LogEvent s) {
-        return this.list.add(s);
+    public static final List<LogEvent> DB = new CopyOnWriteArrayList<>();
+    public static Boolean add(LogEvent s) {
+        return DB.add(s);
     }
 
 
-    public int getSize() {
-        return list.size();
+    public static int getSize() {
+        return DB.size();
     }
 
 
-    public List<LogEvent> getList() {
-        return Collections.unmodifiableList(list);
+    public static List<LogEvent> getDB() {
+        return Collections.unmodifiableList(DB);
     }
 }

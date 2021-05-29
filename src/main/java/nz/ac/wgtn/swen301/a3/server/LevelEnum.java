@@ -38,15 +38,10 @@ public enum LevelEnum {
         return null;
     }
 
-    public int toIndex() {
-        return List.of(LevelEnum.values()).indexOf(this);
-    }
-
     public boolean isGreaterOrEqual(LevelEnum r) {
         return this.compareTo(r) >= 0;
     }
 
     public static void main(String[] args) {
-        System.out.println(DEBUG.toIndex());
     }
 }
