@@ -14,7 +14,6 @@ package nz.ac.wgtn.swen301.a3.server;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonTypeId;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.text.DateFormat;
@@ -55,6 +54,17 @@ public class LogEvent {
 
     public LogEvent() {}
 
+    /**
+     * Instantiates a new Log event. To save the time when generating test LogEvent
+     * id and timestamp will be generated.
+     *
+     *
+     * @param message      the message
+     * @param thread       the thread
+     * @param logger       the logger
+     * @param level        the level
+     * @param errorDetails the error details
+     */
     public LogEvent(String message, String thread, String logger, LevelEnum level, String errorDetails) {
         this.id = UUID.randomUUID().toString();
         this.message = message;
@@ -65,6 +75,17 @@ public class LogEvent {
         this.errorDetails = errorDetails;
     }
 
+    /**
+     * Instantiates a new Log event. The full size constructor.
+     *
+     * @param id           the id
+     * @param message      the message
+     * @param timestamp    the timestamp
+     * @param thread       the thread
+     * @param logger       the logger
+     * @param level        the level
+     * @param errorDetails the error details
+     */
     public LogEvent(String id, String message, String timestamp, String thread, String logger, LevelEnum level, String errorDetails) {
         this.id = id;
         this.message = message;
