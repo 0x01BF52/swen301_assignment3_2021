@@ -9,7 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.InvalidParameterException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
@@ -70,7 +74,18 @@ public class LogsServlet extends HttpServlet {
                 results.add(db.get(i));
             }
         }
-        results.sort(Comparator.comparing(LogEvent::getTimestamp));
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+
+        results.sort(Comparator.comparing(logEvent -> {
+            try {
+                return dateFormat.parse(logEvent.getTimestamp());
+            } catch (ParseException e) {
+                System.err.println(e.getMessage());
+            }
+            return null;
+        }));
+        Collections.reverse(results);
+
         out.println(objectMapper.writeValueAsString(results));
 
         out.close();
