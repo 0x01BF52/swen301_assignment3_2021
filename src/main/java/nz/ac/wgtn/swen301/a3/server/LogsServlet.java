@@ -32,7 +32,9 @@ public class LogsServlet extends HttpServlet {
 
     @Override
     public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("doDelete");
+        System.out.println("LogsServlet doDelete Invoke");
+        Persistency.clear();
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override

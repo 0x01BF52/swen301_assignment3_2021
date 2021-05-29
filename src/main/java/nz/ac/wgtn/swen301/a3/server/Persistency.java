@@ -10,6 +10,9 @@ public class Persistency {
         return DB.add(s);
     }
 
+    public static void clear() {
+        DB.clear();
+    }
 
     public static int getSize() {
         return DB.size();
