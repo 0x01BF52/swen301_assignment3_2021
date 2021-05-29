@@ -85,9 +85,8 @@ public class LogsServlet extends HttpServlet {
             return null;
         }));
         Collections.reverse(results);
-
+        resp.setStatus(HttpServletResponse.SC_OK);
         out.println(objectMapper.writeValueAsString(results));
-
         out.close();
     }
 
