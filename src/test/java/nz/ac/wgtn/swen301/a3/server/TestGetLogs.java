@@ -55,7 +55,7 @@ class TestGetLogs {
         servlet.doGet(request, response);
         assertEquals(MockHttpServletResponse.SC_OK, response.getStatus());
         assertEquals("[]\n", response.getContentAsString());
-        //except empty list
+        //expect empty list
     }
 
     @Test
