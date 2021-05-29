@@ -11,8 +11,6 @@ import java.io.PrintWriter;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +37,7 @@ public class LogsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("LogsServlet doGet Invoke");
         PrintWriter out = resp.getWriter();
         var reqLimit = req.getParameter("limit");
         var reqLevelSting = req.getParameter("level");
@@ -49,14 +48,13 @@ public class LogsServlet extends HttpServlet {
                 throw new InvalidParameterException();
             }
         } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "bad or missing input parameter (for instance, level is not a valid level or limit is not a positive, non-zero integer)");
             out.close();
             return;
         }
-        System.out.println("LogsServlet doGet Invoke");
         resp.setContentType("application/json");
         var level = LevelEnum.valueOf(reqLevelSting);
-        Persistency.add(new LogEvent(UUID.randomUUID(), "random message", new Date(), "thread", "logger", LevelEnum.FATAL, "string"));
+//        Persistency.add(new LogEvent("random message", "thread", "logger", LevelEnum.FATAL, "string"));
         var db = Persistency.getDB();
         ArrayList<LogEvent> results = new ArrayList<>();
         if (db.isEmpty()) {
@@ -80,6 +78,18 @@ public class LogsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("doPostInvoke");
         var reqBody = req.getReader().lines().collect(Collectors.joining());
-        Persistency.add(objectMapper.readValue(reqBody, LogEvent.class));
+        try {
+            var newEvent = objectMapper.readValue(reqBody, LogEvent.class);
+            if (Persistency.getDB().stream().map(LogEvent::getId).anyMatch(e -> e.equals(newEvent.getId()))) {
+                resp.sendError(HttpServletResponse.SC_CONFLICT, "a log event with this id already exists");
+            } else {
+                Persistency.add(newEvent);
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+            }
+            System.out.println(newEvent);
+        } catch (Exception e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid input, object invalid");
+            throw e;
+        }
     }
 }

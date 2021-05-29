@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeId;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
@@ -26,15 +28,17 @@ import java.util.UUID;
  */
 @JsonPropertyOrder({"id", "message", "timestamp", "thread", "logger", "level", "errorDetails"})
 public class LogEvent {
+    private static final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+
+
     @JsonProperty("id")
-    @JsonTypeId
-    private UUID id = null;
+    private String id;
 
     @JsonProperty("message")
     private String message = null;
 
     @JsonProperty("timestamp")
-    private Date timestamp = null;
+    private String timestamp = null;
 
     @JsonProperty("thread")
     private String thread = null;
@@ -51,7 +55,17 @@ public class LogEvent {
 
     public LogEvent() {}
 
-    public LogEvent(UUID id, String message, Date timestamp, String thread, String logger, LevelEnum level, String errorDetails) {
+    public LogEvent(String message, String thread, String logger, LevelEnum level, String errorDetails) {
+        this.id = UUID.randomUUID().toString();
+        this.message = message;
+        this.timestamp = dateFormat.format(new Date());
+        this.thread = thread;
+        this.logger = logger;
+        this.level = level;
+        this.errorDetails = errorDetails;
+    }
+
+    public LogEvent(String id, String message, String timestamp, String thread, String logger, LevelEnum level, String errorDetails) {
         this.id = id;
         this.message = message;
         this.timestamp = timestamp;
@@ -61,14 +75,8 @@ public class LogEvent {
         this.errorDetails = errorDetails;
     }
 
-    public LogEvent(String message, String thread, String logger, LevelEnum level, String errorDetails) {
-        this.id = UUID.randomUUID();
-        this.timestamp = new Date();
-        this.message = message;
-        this.thread = thread;
-        this.logger = logger;
+    public void setLevel(LevelEnum level) {
         this.level = level;
-        this.errorDetails = errorDetails;
     }
 
     /**
@@ -77,7 +85,7 @@ public class LogEvent {
      * @return id id
      */
     @JsonProperty("id")
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
@@ -86,7 +94,7 @@ public class LogEvent {
      *
      * @param id the id
      */
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -117,7 +125,7 @@ public class LogEvent {
      * @return timestamp timestamp
      */
     @JsonProperty("timestamp")
-    public Date getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
@@ -126,7 +134,7 @@ public class LogEvent {
      *
      * @param timestamp the timestamp
      */
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -218,18 +226,15 @@ public class LogEvent {
 
     @Override
     public String toString() {
-        var sb = new StringBuilder();
-        sb.append("class LogEvent {\n");
-
-        sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    message: ").append(toIndentedString(message)).append("\n");
-        sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");
-        sb.append("    thread: ").append(toIndentedString(thread)).append("\n");
-        sb.append("    logger: ").append(toIndentedString(logger)).append("\n");
-        sb.append("    level: ").append(toIndentedString(level)).append("\n");
-        sb.append("    errorDetails: ").append(toIndentedString(errorDetails)).append("\n");
-        sb.append("}");
-        return sb.toString();
+        return "LogEvent{" +
+            "id='" + id + '\'' +
+            ", message='" + message + '\'' +
+            ", timestamp='" + timestamp + '\'' +
+            ", thread='" + thread + '\'' +
+            ", logger='" + logger + '\'' +
+            ", level=" + level +
+            ", errorDetails='" + errorDetails + '\'' +
+            '}';
     }
 
     /**
