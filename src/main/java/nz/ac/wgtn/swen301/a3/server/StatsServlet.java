@@ -23,7 +23,7 @@ public class StatsServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
         ArrayList<String> headerList = new ArrayList<>(List.of("logger"));
         headerList.addAll(Arrays.stream(LevelEnum.values()).map(LevelEnum::toString).collect(Collectors.toUnmodifiableList()));
-        var htmlBuilder = new StatsTableHTMLBuilder(headerList, true);
+        var htmlBuilder = new StatsTableHTMLBuilder(headerList, false);
         var groupByLogger = Persistency.getDB().stream().collect(Collectors.groupingBy(LogEvent::getLogger));
         groupByLogger.forEach((loggerName, logEvents) -> {
             var groupByLevel = logEvents.stream().collect(Collectors.groupingBy(LogEvent::getLevel));

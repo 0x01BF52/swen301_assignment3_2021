@@ -22,7 +22,7 @@ public class StatsTableHTMLBuilder {
     private static final String TITLE = "<h1>Log Statistics</h1>";
     private static final String BODY_START = "<body>";
     private static final String BODY_END = "</body>";
-    private static final String HTML_START = "<html>";
+    private static final String HTML_START = "<html lang=\"en\">";
     private static final String HTML_END = "</html>";
     private static final String TABLE_START_BORDER = "<table border=\"1\">";
     private static final String TABLE_START = "<table>";
@@ -46,8 +46,8 @@ public class StatsTableHTMLBuilder {
         table.append(DOCTYPE);
         table.append(HTML_START);
         table.append(HEAD);
-        table.append(TITLE);
         table.append(BODY_START);
+        table.append(TITLE);
         if (border) { table.append(TABLE_START_BORDER);} else { table.append(TABLE_START);}
         table.append(TABLE_END);
         this.addTableHeader(headerList);
