@@ -17,12 +17,10 @@ public class StatsServlet extends HttpServlet {
     }
 
     @Override
-    public
-    void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("StatsServlet doGet Invoke");
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-//        IntStream.range(0, 10).mapToObj(i -> new LogEvent(UUID.randomUUID(), "random message", new Date(), "thread", "logger1", LevelEnum.FATAL, "string")).forEach(persistency::add);
         ArrayList<String> headerList = new ArrayList<>(List.of("logger"));
         headerList.addAll(Arrays.stream(LevelEnum.values()).map(LevelEnum::toString).collect(Collectors.toUnmodifiableList()));
         var htmlBuilder = new StatsTableHTMLBuilder(headerList, true);

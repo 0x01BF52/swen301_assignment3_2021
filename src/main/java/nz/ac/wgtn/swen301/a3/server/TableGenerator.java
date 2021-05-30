@@ -5,10 +5,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -38,7 +35,7 @@ public class TableGenerator {
                 list.add("0");
             }
         }
-        return list;
+        return Collections.unmodifiableList(list);
     }
 
     public static Workbook generateWorkbook() {
