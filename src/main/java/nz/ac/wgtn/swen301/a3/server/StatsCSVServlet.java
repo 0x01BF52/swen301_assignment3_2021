@@ -7,6 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class StatsCSVServlet extends HttpServlet {
+    public StatsCSVServlet() {
+        //All classes must have a default constructor (public, no parameters).
+    }
+
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/csv");

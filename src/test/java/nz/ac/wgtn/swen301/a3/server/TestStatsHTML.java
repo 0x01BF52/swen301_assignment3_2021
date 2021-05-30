@@ -36,7 +36,6 @@ class TestStatsHTML {
         MockHttpServletResponse res1 = new MockHttpServletResponse();
         statsServlet.doGet(req1, res1);
         var doc = Jsoup.parse(res1.getContentAsString());
-        doc.select("table");
         Elements header = doc.select("table").get(0).select("tr").select("th");
         assertEquals(1 + LevelEnum.values().length, header.size(), "Column number error");
     }

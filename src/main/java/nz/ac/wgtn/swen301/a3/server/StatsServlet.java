@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class StatsServlet extends HttpServlet {
-    private int generateRows() {
-        return 0;
+
+    public StatsServlet() {
+        //All classes must have a default constructor (public, no parameters).
     }
 
     @Override

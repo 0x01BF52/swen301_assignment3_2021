@@ -5,9 +5,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.stream.IntStream;
 
 public class StatsXLSServlet extends HttpServlet {
+    public StatsXLSServlet() {
+        //All classes must have a default constructor (public, no parameters).
+    }
+
     static final String SHEET_NAME = "stats";
 
     @Override
