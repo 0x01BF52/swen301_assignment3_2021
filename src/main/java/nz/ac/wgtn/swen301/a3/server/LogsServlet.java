@@ -32,6 +32,7 @@ public class LogsServlet extends HttpServlet {
      */
     public LogsServlet() {
         //This class must have a default constructor (public, no parameters 1). [2 marks]
+        Persistency.clear();
     }
 
     @Override
@@ -60,7 +61,6 @@ public class LogsServlet extends HttpServlet {
         }
         resp.setContentType("application/json");
         var level = LevelEnum.valueOf(reqLevelSting);
-//        Persistency.add(new LogEvent("random message", "thread", "logger", LevelEnum.FATAL, "string"));
         var db = Persistency.getDB();
         ArrayList<LogEvent> results = new ArrayList<>();
         if (db.isEmpty()) {
@@ -95,6 +95,9 @@ public class LogsServlet extends HttpServlet {
         System.out.println("doPostInvoke");
         var reqBody = req.getReader().lines().collect(Collectors.joining());
         try {
+            if (reqBody.isEmpty()) {
+                throw new InvalidParameterException("req body is empty");
+            }
             var newEvent = objectMapper.readValue(reqBody, LogEvent.class);
             if (Persistency.getDB().stream().map(LogEvent::getId).anyMatch(e -> e.equals(newEvent.getId()))) {
                 resp.sendError(HttpServletResponse.SC_CONFLICT, "a log event with this id already exists");
@@ -105,7 +108,6 @@ public class LogsServlet extends HttpServlet {
             System.out.println(newEvent);
         } catch (Exception e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid input, object invalid");
-            throw e;
         }
     }
 }
