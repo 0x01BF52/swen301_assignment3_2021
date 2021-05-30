@@ -40,8 +40,6 @@ public class StatsTableHTMLBuilder {
      *
      * @param headerList the headerList
      * @param border     the border
-     * @param rows       the rows
-     * @param columns    the columns
      */
     public StatsTableHTMLBuilder(List<String> headerList, boolean border) {
         this.columns = headerList.size();
@@ -94,7 +92,7 @@ public class StatsTableHTMLBuilder {
             sb.append(COLUMN_START);
             sb.append(loggerName);
             sb.append(COLUMN_END);
-            for (int i = 0; i < LevelEnum.values().length; i++) {
+            for (var i = 0; i < LevelEnum.values().length; i++) {
                 sb.append(COLUMN_START);
                 LevelEnum currentLevel = LevelEnum.values()[i];
                 if (groupByLevel.containsKey(currentLevel)) {
