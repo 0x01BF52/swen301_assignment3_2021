@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen301.a3.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,6 +64,7 @@ class TestStatsHTML {
         doc.select("table");
         var cols = doc.select("table").get(0).select("tr");
         IntStream.range(1, cols.size()).forEach(i -> assertEquals("1", cols.get(i).select("td").get(1 + LevelEnum.INFO.ordinal()).text()));
+        assertEquals(list.size(),cols.select("td").stream().map(Element::text).filter(e -> e.equals("1")).count());
         assertEquals(1 + list.size(), cols.size(), "row size error");
     }
 

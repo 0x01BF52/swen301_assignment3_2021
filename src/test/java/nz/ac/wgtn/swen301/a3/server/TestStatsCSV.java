@@ -60,8 +60,8 @@ class TestStatsCSV {
 
     @Test
     void dataCorrectnessTest() throws Exception {
-        var om = new ObjectMapper();
         var logsServlet = new LogsServlet();
+        var om = new ObjectMapper();
         var list = IntStream.range(1, 6).mapToObj(i -> {
             return new LogEvent(String.valueOf(i), "formatTest", String.valueOf(i), LevelEnum.values()[i], "log" + i);
         }).collect(Collectors.toUnmodifiableList());
