@@ -19,12 +19,11 @@ public class StatsServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("StatsServlet doGet Invoke");
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
         ArrayList<String> headerList = new ArrayList<>(List.of("logger"));
         headerList.addAll(Arrays.stream(LevelEnum.values()).map(LevelEnum::toString).collect(Collectors.toUnmodifiableList()));
-        var htmlBuilder = new StatsTableHTMLBuilder(headerList, false);
+        var htmlBuilder = new HTMLBuilder(headerList, false);
         var groupByLogger = Persistency.getDB().stream().collect(Collectors.groupingBy(LogEvent::getLogger));
         groupByLogger.forEach((loggerName, logEvents) -> {
             var groupByLevel = logEvents.stream().collect(Collectors.groupingBy(LogEvent::getLevel));

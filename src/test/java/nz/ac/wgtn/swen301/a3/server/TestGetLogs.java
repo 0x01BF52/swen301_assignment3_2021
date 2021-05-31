@@ -31,6 +31,15 @@ class TestGetLogs {
     }
 
     @Test
+    void test_contentType() throws ServletException, IOException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        request.addParameters(Map.of("limit", "5", "level", "ALL"));
+        servlet.doGet(request, response);
+        assertEquals("application/json", response.getContentType());
+    }
+
+    @Test
     void test_noParameters() throws IOException, ServletException {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();

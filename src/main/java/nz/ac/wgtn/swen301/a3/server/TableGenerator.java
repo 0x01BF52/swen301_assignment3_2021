@@ -2,7 +2,6 @@ package nz.ac.wgtn.swen301.a3.server;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.*;
@@ -10,9 +9,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TableGenerator {
+    public TableGenerator() {
+        //All classes must have a default constructor (public, no parameters).
+    }
+
     static final String SHEET_NAME = "stats";
 
-    public static List<List<String>> convert() {
+    public static List<List<String>> generateListOfList() {
         var listOfList = new ArrayList<List<String>>();
         ArrayList<String> headerList = new ArrayList<>(List.of("logger"));
         headerList.addAll(Arrays.stream(LevelEnum.values()).map(LevelEnum::toString).collect(Collectors.toUnmodifiableList()));
@@ -41,13 +44,11 @@ public class TableGenerator {
     public static Workbook generateWorkbook() {
         Workbook workbook = new HSSFWorkbook();
         var sheet = workbook.createSheet(SHEET_NAME);
-        var table = TableGenerator.convert();
+        var table = TableGenerator.generateListOfList();
         IntStream.range(0, table.size()).forEach(rowIndex -> {
             var row = sheet.createRow(rowIndex);
             var colList = table.get(rowIndex);
-            IntStream.range(0, colList.size()).forEach(colIndex -> {
-                row.createCell(colIndex).setCellValue(colList.get(colIndex));
-            });
+            IntStream.range(0, colList.size()).forEach(colIndex -> row.createCell(colIndex).setCellValue(colList.get(colIndex)));
         });
         return workbook;
     }
@@ -56,9 +57,9 @@ public class TableGenerator {
         var sheet = generateWorkbook().getSheetAt(0);
         var sb = new StringBuilder();
         Row row;
-        for (int i = 0; i <= sheet.getLastRowNum(); i++) {
+        for (var i = 0; i <= sheet.getLastRowNum(); i++) {
             row = sheet.getRow(i);
-            for (int j = 0; j < row.getLastCellNum(); j++) {
+            for (var j = 0; j < row.getLastCellNum(); j++) {
                 sb.append(row.getCell(j)).append("\t");
             }
             sb.append("\n");

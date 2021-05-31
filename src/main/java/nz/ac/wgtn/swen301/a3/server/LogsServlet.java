@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 public class LogsServlet extends HttpServlet {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-
     /**
      * Instantiates a new Logs servlet.
      */
@@ -37,14 +36,12 @@ public class LogsServlet extends HttpServlet {
 
     @Override
     public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("LogsServlet doDelete Invoke");
         Persistency.clear();
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("LogsServlet doGet Invoke");
         PrintWriter out = resp.getWriter();
         var reqLimit = req.getParameter("limit");
         var reqLevelSting = req.getParameter("level");
@@ -79,8 +76,7 @@ public class LogsServlet extends HttpServlet {
         results.sort(Comparator.comparing(logEvent -> {
             try {
                 return dateFormat.parse(logEvent.getTimestamp());
-            } catch (ParseException e) {
-                System.err.println(e.getMessage());
+            } catch (ParseException ignored) {
             }
             return null;
         }));
@@ -92,7 +88,6 @@ public class LogsServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("doPostInvoke");
         var reqBody = req.getReader().lines().collect(Collectors.joining());
         try {
             if (reqBody.isEmpty()) {
@@ -105,7 +100,6 @@ public class LogsServlet extends HttpServlet {
                 Persistency.add(newEvent);
                 resp.setStatus(HttpServletResponse.SC_CREATED);
             }
-            System.out.println(newEvent);
         } catch (Exception e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid input, object invalid");
         }

@@ -10,6 +10,10 @@ public class Persistency {
         return DB.add(s);
     }
 
+    public Persistency() {
+        //All classes must have a default constructor (public, no parameters).
+    }
+
     public static void clear() {
         DB.clear();
     }

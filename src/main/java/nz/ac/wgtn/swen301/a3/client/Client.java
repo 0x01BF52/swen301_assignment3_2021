@@ -8,13 +8,10 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 public class Client {
-    static IllegalArgumentException argExp = new IllegalArgumentException("This has the following parameters (in this order):\n" +
-        "a. type (either csv or excel) -- the type of data requested\n" +
-        "b. fileName -- a local file name used to store the data fetched");
-
     public static void main(String[] args) throws Exception {
         if (args.length != 2 || args[1] == null || args[0] == null) {
-            throw argExp;
+            System.out.println("This has the following parameters (in this order):\na. type (either csv or excel) -- the type of data requested\nb. fileName -- a local file name used to store the data fetched");
+            return;
         }
         var fileName = args[1];
         var type = args[0];
@@ -32,6 +29,5 @@ public class Client {
             default:
                 throw new IllegalStateException("Unexpected value: " + type);
         }
-
     }
 }

@@ -55,16 +55,16 @@ class TestStatsCSV {
         MockHttpServletResponse response2 = new MockHttpServletResponse();
         servlet.doGet(request2, response2);
         var resSplit = response2.getContentAsString().split("\n");
-        assertEquals(TableGenerator.convert().size(), resSplit.length);
+        assertEquals(TableGenerator.generateListOfList().size(), resSplit.length);
     }
 
     @Test
     void dataCorrectnessTest() throws Exception {
         var logsServlet = new LogsServlet();
         var om = new ObjectMapper();
-        var list = IntStream.range(1, 6).mapToObj(i -> {
-            return new LogEvent(String.valueOf(i), "formatTest", String.valueOf(i), LevelEnum.values()[i], "log" + i);
-        }).collect(Collectors.toUnmodifiableList());
+        var list = IntStream.range(1, 6).mapToObj(i ->
+            new LogEvent(String.valueOf(i), "formatTest", String.valueOf(i), LevelEnum.values()[i], "log" + i))
+            .collect(Collectors.toUnmodifiableList());
         //except 5 log, each one is from different logger
         //which means 6 lines including header row
         list.forEach(e -> {

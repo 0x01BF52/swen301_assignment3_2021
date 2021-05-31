@@ -14,8 +14,7 @@ import java.util.Map;
  * System.out.println(table.toString());
  */
 
-public class StatsTableHTMLBuilder {
-    private final int columns;
+public class HTMLBuilder {
     private final StringBuilder table = new StringBuilder();
     private static final String DOCTYPE = "<!DOCTYPE html>";
     private static final String HEAD = "<head><title>Log Statistics</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'></head>";
@@ -41,8 +40,7 @@ public class StatsTableHTMLBuilder {
      * @param headerList the headerList
      * @param border     the border
      */
-    public StatsTableHTMLBuilder(List<String> headerList, boolean border) {
-        this.columns = headerList.size();
+    public HTMLBuilder(List<String> headerList, boolean border) {
         table.append(DOCTYPE);
         table.append(HTML_START);
         table.append(HEAD);
@@ -64,7 +62,7 @@ public class StatsTableHTMLBuilder {
     private void addTableHeader(List<String> values) {
         int lastIndex = table.lastIndexOf(TABLE_END);
         if (lastIndex > 0) {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.append(ROW_START);
             for (String value : values) {
                 sb.append(HEADER_START);
@@ -87,7 +85,7 @@ public class StatsTableHTMLBuilder {
         int lastIndex = table.lastIndexOf(ROW_END);
         if (lastIndex > 0) {
             int index = lastIndex + ROW_END.length();
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.append(ROW_START);
             sb.append(COLUMN_START);
             sb.append(loggerName);
