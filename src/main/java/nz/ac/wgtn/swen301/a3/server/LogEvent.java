@@ -27,7 +27,7 @@ import java.util.UUID;
  */
 @JsonPropertyOrder({"id", "message", "timestamp", "thread", "logger", "level", "errorDetails"})
 public class LogEvent {
-    private static final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+    private final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
 
     @JsonProperty("id")
